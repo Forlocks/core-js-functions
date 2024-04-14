@@ -18,7 +18,7 @@
  *
  */
 function getCurrentFunctionName() {
-  return arguments.callee.name;
+  return getCurrentFunctionName.name;
 }
 
 /**
@@ -77,7 +77,7 @@ function getArgumentsCount(funcs) {
  *
  */
 function getPowerFunction(exponent) {
-  return (x) => Math.pow(x, exponent);
+  return (x) => x ** exponent;
 }
 
 /**
@@ -94,15 +94,19 @@ function getPowerFunction(exponent) {
  *   getPolynom()      => null
  */
 function getPolynom(a, b, c) {
+  let result;
+
   if (arguments.length === 1) {
-    return (x) => a;
+    result = () => a;
   } else if (arguments.length === 2) {
-    return (x) => a * x + b;
+    result = (x) => a * x + b;
   } else if (arguments.length === 3) {
-    return (x) => a * x ** 2 + b * x + c;
+    result = (x) => a * x ** 2 + b * x + c;
   } else {
-    return null;
+    result = null;
   }
+
+  return result;
 }
 
 /**
@@ -127,8 +131,8 @@ function memoize(func) {
       memory = func();
     }
 
-    return memory
-  }
+    return memory;
+  };
 }
 
 /**
@@ -148,16 +152,18 @@ function memoize(func) {
  */
 function retry(func, attempts) {
   return () => {
-    let attempt = 0
+    let attempt = 0;
 
     for (attempt; attempt < attempts; attempt += 1) {
       try {
         return func();
-      } catch (error) {};
+      } catch (error) {
+        attempt -= 0;
+      }
     }
 
     return attempt;
-  }
+  };
 }
 
 /**
@@ -186,8 +192,8 @@ function retry(func, attempts) {
 function logger(func, logFunc) {
   return (...args) => {
     const newArgs = `${args.map((item) => JSON.stringify(item)).join(',')}`;
-    const logStart = `${func.name}(${newArgs})` + ' starts';
-    const logEnd = `${func.name}(${newArgs})` + ' ends';
+    const logStart = `${func.name}(${newArgs}) starts`;
+    const logEnd = `${func.name}(${newArgs}) ends`;
 
     logFunc(logStart);
 
